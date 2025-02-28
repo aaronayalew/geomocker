@@ -64,7 +64,30 @@ func geocodeHandler(w http.ResponseWriter, r *http.Request) {
 
         if areaName == "" {
                 w.Header().Set("Content-Type", "application/json")
-                w.Write([]byte(`{"results": [], "status": "ZERO_RESULTS"}`))
+                w.Write([]byte(fmt.Sprintf(`{
+                        "results": [
+                                {
+                                        "address_components": [
+                                                {
+                                                        "long_name": "Dire Dawa",
+                                                        "short_name": "Dire Dawa",
+                                                        "types": ["locality", "political"]
+                                                }
+                                        ],
+                                        "formatted_address": "Dire Dawa",
+                                        "geometry": {
+                                                "location": {
+                                                        "lat": %f,
+                                                        "lng": %f
+                                                },
+                                                "location_type": "APPROXIMATE"
+                                        },
+                                        "place_id": "mock_dire_dawa_place_id",
+                                        "types": ["locality", "political"]
+                                }
+                        ],
+                        "status": "OK"
+                }`, lat, lng)))
                 return
         }
 
