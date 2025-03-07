@@ -37,7 +37,14 @@ type FeatureCollection struct {
 func main() {
 	http.HandleFunc("/geocode", geocodeHandler)
 	fmt.Println("Server listening on :8080")
+
+	err := http.ListenAndServeTLS(":8443", "/etc/letsencrypt/live/alpha.bludelivery.et/fullchain.pem",
+		"/etc/letsencrypt/live/alpha.bludelivery.et/privkey.pem", nil)
 	log.Fatal(http.ListenAndServe(":8080", nil))
+
+	if err != nil {
+		log.Fatal("ListenAndServeTLS: ", err)
+	}
 }
 
 func geocodeHandler(w http.ResponseWriter, r *http.Request) {
