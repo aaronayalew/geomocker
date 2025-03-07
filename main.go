@@ -40,8 +40,6 @@ func main() {
 
 	err := http.ListenAndServeTLS(":8443", "/etc/letsencrypt/live/alpha.bludelivery.et/fullchain.pem",
 		"/etc/letsencrypt/live/alpha.bludelivery.et/privkey.pem", nil)
-	log.Fatal(http.ListenAndServe(":8080", nil))
-
 	if err != nil {
 		log.Fatal("ListenAndServeTLS: ", err)
 	}
