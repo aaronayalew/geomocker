@@ -36,7 +36,7 @@ type FeatureCollection struct {
 
 func main() {
 	http.HandleFunc("/geocode", geocodeHandler)
-	fmt.Println("Server listening on :8080")
+	fmt.Println("Server listening on :8443")
 
 	err := http.ListenAndServeTLS(":8443", "/etc/letsencrypt/live/alpha.bludelivery.et/fullchain.pem",
 		"/etc/letsencrypt/live/alpha.bludelivery.et/privkey.pem", nil)
