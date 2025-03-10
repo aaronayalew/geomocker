@@ -35,11 +35,26 @@ type FeatureCollection struct {
 }
 
 func main() {
-	http.HandleFunc("/geocode", geocodeHandler)
-	fmt.Println("Server listening on :8443")
+	handler := http.HandlerFunc(geocodeHandler)
 
-	err := http.ListenAndServeTLS(":8443", "/etc/letsencrypt/live/alpha.bludelivery.et/fullchain.pem",
-		"/etc/letsencrypt/live/alpha.bludelivery.et/privkey.pem", nil)
+	// Start HTTP server (localhost only) in a goroutine
+	go func() {
+		fmt.Println("HTTP Server listening on :8080 (localhost only)")
+		localServer := &http.Server{
+			Addr:    "127.0.0.1:8080", // Only accessible from localhost
+			Handler: handler,
+		}
+		if err := localServer.ListenAndServe(); err != nil {
+			log.Printf("HTTP server error: %v", err)
+		}
+	}()
+
+	// Start HTTPS server
+	fmt.Println("HTTPS Server listening on :8443")
+	err := http.ListenAndServeTLS(":8443",
+		"/etc/letsencrypt/live/alpha.bludelivery.et/fullchain.pem",
+		"/etc/letsencrypt/live/alpha.bludelivery.et/privkey.pem",
+		handler)
 	if err != nil {
 		log.Fatal("ListenAndServeTLS: ", err)
 	}
